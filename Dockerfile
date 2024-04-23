@@ -1,4 +1,4 @@
-FROM python:3.10-buster as builder
+FROM python:3.10.4-buster as builder
 WORKDIR /app
 COPY ./alexa-actions/alexa_actions.py .
 COPY ./alexa-actions/config.py .
@@ -9,11 +9,12 @@ COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
 
 RUN pip install -r requirements.txt
+RUN pip install awslambdaric
 
 FROM alpine:latest as tailscale
 WORKDIR /app
 COPY . ./
-ENV TSFILE=tailscale_1.62.1_amd64.tgz
+ENV TSFILE=tailscale_1.64.0_amd64.tgz
 RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
   tar xzf ${TSFILE} --strip-components=1
 COPY . ./

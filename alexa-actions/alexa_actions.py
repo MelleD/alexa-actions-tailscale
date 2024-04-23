@@ -711,7 +711,7 @@ def event_handler(event, context):
     The order matters - they're processed top to bottom.
     """
     sb = SkillBuilder()
-
+    logger.info("Add SkillBuilder to the lambda handler.")
     # register request / intent handlers
     sb.add_request_handler(LaunchRequestHandler())
     sb.add_request_handler(YesIntentHandler())
@@ -732,4 +732,5 @@ def event_handler(event, context):
     sb.add_global_request_interceptor(LocalizationInterceptor())
 
     lambda_handler = sb.lambda_handler()
+    logger.info("End SkillBuilder to the lambda handler.")
     return lambda_handler
