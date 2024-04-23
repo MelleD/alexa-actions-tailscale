@@ -35,7 +35,7 @@ jobs:
       -
         name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           ECR_REPOSITORY: ha-custom-lambda-tailscale
           IMAGE_TAG: latest
         run: |
