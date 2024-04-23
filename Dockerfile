@@ -8,7 +8,7 @@ COPY ./alexa-actions/language_strings.json .
 COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
 
-RUN pip install -r alexa-actions/requirements.txt
+RUN pip install -r requirements.txt
 
 FROM alpine:latest as tailscale
 WORKDIR /app
