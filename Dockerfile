@@ -1,8 +1,9 @@
 FROM python:3.10-buster as builder
 WORKDIR /app
-COPY ./alexa-actions/const.py .
-COPY ./alexa-actions/schema.py .
 COPY ./alexa-actions/alexa_actions.py .
+COPY ./alexa-actions/config.py .
+COPY ./alexa-actions/const.py .
+COPY ./alexa-actions/schemas.py .
 COPY ./alexa-actions/language_strings.json .
 COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
