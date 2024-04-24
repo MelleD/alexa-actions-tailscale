@@ -15,5 +15,5 @@ if [ -z "${AWS_LAMBDA_RUNTIME_API}" ]; then
   exec env ALL_PROXY="socks5://localhost:1055/" /usr/local/bin/aws-lambda-rie /var/lang/bin/python3.8 -m awslambdaric $@
 else
   echo Start python awslambdaric
-  exec env ALL_PROXY="socks5://localhost:1055/" /var/lang/bin/python3.12 -m awslambdaric $@
+  exec env ALL_PROXY="socks5://localhost:1055/" /var/lang/bin/python3.10 -m awslambdaric $@
 fi     
