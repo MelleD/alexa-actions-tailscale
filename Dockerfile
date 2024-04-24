@@ -8,6 +8,7 @@ COPY ./alexa-actions/schemas.py .
 COPY ./alexa-actions/language_strings.json .
 COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
+COPY ./alexa-actions/lambda_function.py .
 
 #RUN pip install -r requirements.txt
 RUN pip install -t . isodate pydantic typing-extensions urllib3 pysocks ask_sdk_core ask_sdk_model awslambdaric
@@ -38,4 +39,4 @@ RUN mkdir -p /var/run && ln -s /tmp/tailscale /var/run/tailscale && \
 # Run on container startup.
 EXPOSE 8080
 ENTRYPOINT ["/var/runtime/custom_entrypoint"]
-CMD [ "alexa_actions.event_handler" ]
+CMD [ "lambda_function" ]

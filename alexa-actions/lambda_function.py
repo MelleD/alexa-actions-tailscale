@@ -699,35 +699,35 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
         handler_input.attributes_manager.request_attributes["_"] = data
 
 
-def event_handler(event, context):
-    """
-    The SkillBuilder object acts as the entry point for your skill, routing all request and response
-    payloads to the handlers above. Make sure any new handlers or interceptors you've
-    defined are included below.
-    The order matters - they're processed top to bottom.
-    """
-    logger.setLevel(logging.DEBUG)
-    sb = SkillBuilder()
-    logger.debug("Add SkillBuilder to the lambda handler.")
-    # register request / intent handlers
-    sb.add_request_handler(LaunchRequestHandler())
-    sb.add_request_handler(YesIntentHandler())
-    sb.add_request_handler(NoIntentHandler())
-    sb.add_request_handler(StringIntentHandler())
-    sb.add_request_handler(SelectIntentHandler())
-    sb.add_request_handler(NumericIntentHandler())
-    sb.add_request_handler(DurationIntentHandler())
-    sb.add_request_handler(DateTimeIntentHandler())
-    sb.add_request_handler(CancelOrStopIntentHandler())
-    sb.add_request_handler(SessionEndedRequestHandler())
-    sb.add_request_handler(IntentReflectorHandler())
 
-    # register exception handlers
-    sb.add_exception_handler(CatchAllExceptionHandler())
+"""
+The SkillBuilder object acts as the entry point for your skill, routing all request and response
+payloads to the handlers above. Make sure any new handlers or interceptors you've
+defined are included below.
+The order matters - they're processed top to bottom.
+"""
+logger.setLevel(logging.DEBUG)
+sb = SkillBuilder()
+logger.debug("Add SkillBuilder to the lambda handler.")
+# register request / intent handlers
+sb.add_request_handler(LaunchRequestHandler())
+sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(NoIntentHandler())
+sb.add_request_handler(StringIntentHandler())
+sb.add_request_handler(SelectIntentHandler())
+sb.add_request_handler(NumericIntentHandler())
+sb.add_request_handler(DurationIntentHandler())
+sb.add_request_handler(DateTimeIntentHandler())
+sb.add_request_handler(CancelOrStopIntentHandler())
+sb.add_request_handler(SessionEndedRequestHandler())
+sb.add_request_handler(IntentReflectorHandler())
+
+# register exception handlers
+sb.add_exception_handler(CatchAllExceptionHandler())
 
     # register response interceptors
-    sb.add_global_request_interceptor(LocalizationInterceptor())
+sb.add_global_request_interceptor(LocalizationInterceptor())
 
-    lambda_handler = sb.lambda_handler()
-    logger.debug("End SkillBuilder to the lambda handler.")
-    return lambda_handler(event, context)
+lambda_handler = sb.lambda_handler()
+
+   
