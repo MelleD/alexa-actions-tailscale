@@ -13,11 +13,13 @@
 import json
 from typing import Union, Optional
 import logging
+from datetime import timedelta
+
 
 # 3rd-Party Imports
-import isodate
 import urllib3
-from ask_sdk_core.dispatch_components import AbstractExceptionHandler
+
+from ask_sdk_core.dispatch_components.exception_components import AbstractExceptionHandler
 from ask_sdk_core.dispatch_components.request_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components.request_components import AbstractRequestInterceptor
 from ask_sdk_core.skill_builder import SkillBuilder
@@ -509,11 +511,15 @@ class DurationIntentHandler(AbstractRequestHandler):
         ha_obj = HomeAssistant(handler_input)
         duration = get_slot_value(handler_input, "Durations")
 
+        # TODO Is the Duration handling right?
         logger.debug(f"Duration: {duration}")
-
-        speak_output = ha_obj.post_ha_event(
-            isodate.parse_duration(duration).total_seconds(), RESPONSE_DURATION
-        )
+        if duration is not None:
+            h, m, s = map(int, duration.split(':'))
+            speak_output = ha_obj.post_ha_event(
+                str(timedelta(hours=h, minutes=m, seconds=s).total_seconds()), RESPONSE_DURATION
+            )
+        else:
+            speak_output = "Invalid duration"
 
         return _handle_response(handler_input, speak_output)
 

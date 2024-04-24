@@ -10,7 +10,7 @@ COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
 
 RUN pip install -r requirements.txt
-#RUN pip install awslambdaric isodate pydantic typing-extensions urllib3 pysocks awslambdaric ask_sdk_core ask_sdk_model 
+#RUN pip install awslambdaric pydantic typing-extensions urllib3 pysocks awslambdaric ask_sdk_core ask_sdk_model 
 
 FROM alpine:latest as tailscale
 WORKDIR /app
