@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bullseye as builder
+FROM python:3.12-bullseye as builder
 
 WORKDIR /app
 COPY ./alexa-actions/alexa_actions.py .
