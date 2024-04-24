@@ -1,4 +1,4 @@
-FROM python:3.10 as builder
+FROM python:3.11 as builder
 
 WORKDIR /app
 COPY ./alexa-actions/alexa_actions.py .
@@ -10,7 +10,7 @@ COPY ./alexa-actions/prompts.py .
 COPY ./alexa-actions/requirements.txt .
 
 #RUN pip install -r requirements.txt
-RUN pip install awslambdaric pydantic typing-extensions urllib3 pysocks awslambdaric ask_sdk_core ask_sdk_model 
+RUN pip install pydantic typing-extensions urllib3 pysocks ask_sdk_core ask_sdk_model awslambdaric
 
 FROM alpine:latest as tailscale
 WORKDIR /app
@@ -21,7 +21,7 @@ RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
 COPY . ./
 
 
-FROM public.ecr.aws/lambda/python:3.10
+FROM public.ecr.aws/lambda/python:3.11
 #can't test locally without it
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/local/bin/aws-lambda-rie
 RUN chmod 755 /usr/local/bin/aws-lambda-rie
