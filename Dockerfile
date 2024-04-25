@@ -1,7 +1,6 @@
 FROM python:3.12 as builder
 
 WORKDIR /app
-COPY ./alexa-actions/alexa_actions.py .
 COPY ./alexa-actions/config.py .
 COPY ./alexa-actions/const.py .
 COPY ./alexa-actions/schemas.py .
@@ -11,7 +10,7 @@ COPY ./alexa-actions/requirements.txt .
 COPY ./alexa-actions/lambda_function.py .
 
 #RUN pip install -r requirements.txt
-RUN pip install -t . isodate pydantic typing-extensions urllib3 pysocks ask_sdk_core ask_sdk_model awslambdaric
+RUN pip install -t . isodate pydantic typing-extensions urllib3 urllib3[socks] pysocks ask_sdk_core ask_sdk_model awslambdaric
 
 FROM alpine:latest as tailscale
 WORKDIR /app
@@ -39,4 +38,4 @@ RUN mkdir -p /var/run && ln -s /tmp/tailscale /var/run/tailscale && \
 # Run on container startup.
 EXPOSE 8080
 ENTRYPOINT ["/var/runtime/custom_entrypoint"]
-CMD [ "lambda_function" ]
+CMD [ "lambda_function.lambda_handler" ]

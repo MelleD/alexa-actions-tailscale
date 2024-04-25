@@ -8,6 +8,7 @@ from const import (
     SSL_VERIFY,
     DEBUG,
     AWS_DEFAULT_REGION,
+    ALL_PROXY
 )
 
 
@@ -17,4 +18,5 @@ configuration = {
     SSL_VERIFY: os.environ.get(SSL_VERIFY, default=False),
     DEBUG: os.environ.get(DEBUG, default=False),
     AWS_DEFAULT_REGION: os.environ.get(AWS_DEFAULT_REGION),
+    ALL_PROXY: os.environ.get(ALL_PROXY, default=None)
 }

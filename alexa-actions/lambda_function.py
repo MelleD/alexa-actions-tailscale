@@ -8,7 +8,6 @@
 
 # VERSION 0.0.1
 
-""" NO NEED TO EDIT ANYTHING UNDER THE LINE """
 # Built-In Imports
 import json
 from typing import Union, Optional
@@ -17,6 +16,7 @@ import logging
 
 # 3rd-Party Imports
 import urllib3
+from urllib3.contrib.socks import SOCKSProxyManager
 import isodate
 from ask_sdk_core.dispatch_components.exception_components import AbstractExceptionHandler
 from ask_sdk_core.dispatch_components.request_components import AbstractRequestHandler
@@ -55,6 +55,7 @@ from const import (
     SSL_VERIFY,
     DEBUG,
     AWS_DEFAULT_REGION,
+    ALL_PROXY
 )
 
 logger = logging.getLogger()
@@ -129,15 +130,21 @@ class HomeAssistant(Borg):
         self.ssl_verify = configuration[SSL_VERIFY]
         self.debug = configuration[DEBUG]
         self.aws_region = configuration[AWS_DEFAULT_REGION]
+        self.proxy = configuration[ALL_PROXY]
 
-        #if self.debug:
-        logger.setLevel(logging.DEBUG)
+        if self.debug:
+            logger.setLevel(logging.DEBUG)
 
         logger.debug(f"HA_URL is { self.url}")
 
         # Define class vars
         self.ha_state = None
-        self.http = _init_http_pool(self.ssl_verify)
+
+        if(self.proxy is None):
+            self.http = _init_http_pool(self.ssl_verify)
+        else:
+            logger.debug(f"Proxy is { self.proxy}")
+            self.http = SOCKSProxyManager(self.proxy)
 
         if handler_input:
             self.handler_input = handler_input
@@ -154,8 +161,7 @@ class HomeAssistant(Borg):
         url = self.url
         if not url:
             raise ValueError('Property "url" is missing in config')
-        # return url.replace("/api", "").rstrip("/")
-        return url.rstrip("/")
+        return url.replace("/api", "").rstrip("/")
 
     def _set_ha_error(self, prompt: str):
         """
@@ -177,7 +183,10 @@ class HomeAssistant(Borg):
         :return:
         """
         home_assistant_url = self.get_ha_url()
-        return f"{home_assistant_url}/" + "/".join(path)
+        logger.debug(f"Home Assistant URL: {home_assistant_url}")
+        home_assistant_url = f"{home_assistant_url}/" + "/".join(path)
+        logger.debug(f"Home Assistant Api URL: {home_assistant_url}")
+        return home_assistant_url
 
     def _get_headers(self):
         """
@@ -706,9 +715,8 @@ payloads to the handlers above. Make sure any new handlers or interceptors you'v
 defined are included below.
 The order matters - they're processed top to bottom.
 """
-logger.setLevel(logging.DEBUG)
+
 sb = SkillBuilder()
-logger.debug("Add SkillBuilder to the lambda handler.")
 # register request / intent handlers
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(YesIntentHandler())
