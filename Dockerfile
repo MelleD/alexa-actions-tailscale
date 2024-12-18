@@ -15,7 +15,7 @@ RUN pip install -t . isodate pydantic typing-extensions urllib3 urllib3[socks] p
 FROM alpine:latest as tailscale
 WORKDIR /app
 COPY . ./
-ENV TSFILE=tailscale_1.74.0_amd64.tgz
+ENV TSFILE=tailscale_1.78.1_amd64.tgz
 RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
   tar xzf ${TSFILE} --strip-components=1
 COPY . ./
