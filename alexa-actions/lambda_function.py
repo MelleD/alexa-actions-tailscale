@@ -1,12 +1,4 @@
-#  Copyright (c) 2023.
-#  All rights reserved to the creator of the following script/program/app, please do not
-#  use or distribute without prior authorization from the creator.
-#  Creator: Antonio Manuel Nunes Goncalves
-#  Email: amng835@gmail.com
-#  LinkedIn: https://www.linkedin.com/in/antonio-manuel-goncalves-983926142/
-#  Github: https://github.com/DEADSEC-SECURITY
-
-# VERSION 0.0.1
+# VERSION 0.12.0
 
 # Built-In Imports
 import json
@@ -295,17 +287,14 @@ class HomeAssistant(Borg):
         :param response:
         :return: Json object or None
         """
-        decoded_response: Union[str, bytes] = json.loads(
-            response.data.decode("utf-8")
-        ).get("state")
+        decoded_response: Union[str, bytes] = json.loads(response.data.decode("utf-8")).get("state")
         logger.debug(f"Decoded response: {decoded_response}")
 
         if decoded_response:
             return json.loads(decoded_response)
 
         logger.error(
-            "No entity state provided by Home Assistant. "
-            "Did you forget to add the actionable notification entity?"
+            "No entity state provided by Home Assistant. " "Did you forget to add the actionable notification entity?"
         )
         self._set_ha_error(prompts.ERROR_CONFIG)
         logger.debug(self.ha_state)
@@ -335,16 +324,12 @@ class HomeAssistant(Borg):
 
         self.ha_state = HaState(
             event_id=response.get("event"),
-            suppress_confirmation=_string_to_bool(
-                response.get("suppress_confirmation")
-            ),
+            suppress_confirmation=_string_to_bool(response.get("suppress_confirmation")),
             text=response.get("text"),
         )
         logger.debug(self.ha_state)
 
-    def post_ha_event(
-        self, response: str, response_type: str, **kwargs
-    ) -> Optional[str]:
+    def post_ha_event(self, response: str, response_type: str, **kwargs) -> Optional[str]:
         """
         Posts an event to the Home Assistant server.
 
@@ -620,6 +605,22 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
         return _handle_response(handler_input, speak_output)
 
+class FallbackHandler(AbstractRequestHandler):
+    """Handler for Fallback."""
+
+    def can_handle(self, handler_input):
+        """Check for Select Intent."""
+        return is_intent_name("AMAZON.FallbackIntent")(handler_input)
+
+    def handle(self, handler_input):
+        """Handle Fallback."""
+        logger.info("Fallback Handler triggered")
+        ha_obj = HomeAssistant(handler_input)
+        #reason = handler_input.request_envelope.request.reason
+        #if reason == SessionEndedReason.EXCEEDED_MAX_REPROMPTS or reason == SessionEndedReason.USER_INITIATED:
+        ha_obj.post_ha_event(RESPONSE_NONE, RESPONSE_NONE)
+
+        return handler_input.response_builder.response
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """Handler for Session End."""
@@ -727,6 +728,7 @@ sb.add_request_handler(NumericIntentHandler())
 sb.add_request_handler(DurationIntentHandler())
 sb.add_request_handler(DateTimeIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
+sb.add_request_handler(FallbackHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 sb.add_request_handler(IntentReflectorHandler())
 
