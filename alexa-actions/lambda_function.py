@@ -51,6 +51,7 @@ from const import (
 )
 
 logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def _handle_response(handler, speak_out: Optional[str]):
