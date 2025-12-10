@@ -1,4 +1,4 @@
-FROM python:3.12 as builder
+FROM python:3.14 as builder
 
 WORKDIR /app
 COPY ./alexa-actions/config.py .
